@@ -2,12 +2,23 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ecommerce.db'
+app.config['SECRET_KEY'] = "8yah%te72u14KJS9j30088##EXs"
 
+login_manager = LoginManager() # to allow login_user
 db = SQLAlchemy(app)
+login_manager.init_app(app)
+login_manager.login_view = '/login' # indicate login route
 CORS(app)
+
+class User(db.Model, UserMixin):
+    """ User Model """
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), nullable=False, unique=True)
+    password = db.Column(db.String(80), nullable=True)
 
 class Product(db.Model):
     """ Product Model """
@@ -16,14 +27,42 @@ class Product(db.Model):
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.Text, nullable=True)
 
+# Authentication
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+@app.route('/login', methods=['POST'])
+def login():
+    """ POST /login """
+    data = request.json
+
+    user = User.query.filter_by(
+        username=data.get("username")
+    ).first() # filter other column rather than "id"
+
+    if user and data.get("password") == user.password:
+        login_user(user) # user's authentication
+        return jsonify({"message":"Logged in successfully"})
+
+    return jsonify({"message":"Unauthorized Invalid credentials"}), 401
+
+@app.route('/logout', methods=["POST"])
+@login_required
+def logout():
+    """ POST /logout """
+    logout_user()
+    return jsonify({"message":"Logout successfully"})
+
 @app.route('/api/products/add', methods=['POST'])
+@login_required # protect route by user is not allowed
 def add_product():
     """ POST /api/products/add """
     data = request.json
     if 'name' in data and 'price' in data:
         product = Product(
-                    name=data["name"], 
-                    price=data["price"], 
+                    name=data["name"],
+                    price=data["price"],
                     description=data.get("description","")
         )
         db.session.add(product)
@@ -32,6 +71,7 @@ def add_product():
     return jsonify({"message":"Invalid product data"}), 400
 
 @app.route('/api/products/delete/<int:product_id>', methods=['DELETE'])
+@login_required
 def delete_product(product_id):
     """ DELETE /api/products/add/{product_id} """
     product = Product.query.get(product_id)
@@ -55,6 +95,7 @@ def get_product_details(product_id):
     return jsonify({"message": "Product not found"}), 404
 
 @app.route('/api/products/update/<int:product_id>', methods=["PUT"])
+@login_required
 def update_product(product_id):
     """ UPDATE /api/products/update/{int:product_id} """
     product = Product.query.get(product_id)

@@ -19,7 +19,7 @@
   <h3 align="center">E-Commerce</h3>
 
   <p align="center">
-    Flask web application using REST API to e-commerce
+    Back-End application built with Python and Flask to use REST API in e-commerce application.
     <br />
     <a href="https://github.com/luk3mn/ecommerce/README.md"><strong>Explore the docs »</strong></a>
     <br />
@@ -120,14 +120,16 @@ _Before starting this application in your local environment, it'll be necessary 
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] /api/products/add POST
-- [x] /api/products/add/{id} DELETE
-- [] /api/products/add GET
-- [] /api/products/add/{id} PUT
+- [x] POST /login
+- [x] POST /logout
+- [x] POST /api/products/add
+- [x] DELETE /api/products/add/{product_id}
+- [x] GET /api/products/{product_id}
+- [x] UPDATE /api/products/update/{int:product_id}
+- [x] GET /api/products
 
 
 <p align="right">(<a href="#ecommerce">back to top</a>)</p>
-
 
 
 <!-- LICENSE -->
