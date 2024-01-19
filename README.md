@@ -13,10 +13,10 @@
 <br />
 <div align="center">
   <a href="https://github.com/luk3mn/ecommerce">
-    <!-- <img src="https://pipedream.com/s.v0/app_mqeh75/logo/orig" alt="Logo" width="80" height="80"> -->
+    <img src="assets/icon.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">E-Commerce</h3>
+  <h3 align="center">E-Commerce API</h3>
 
   <p align="center">
     Back-End application built with Python and Flask to use REST API in e-commerce application.
@@ -58,7 +58,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-<!-- ![Home](src/assets/diagram.png) -->
+![Home](assets/ecommerce_api.png)
 
 
 <p align="justify">
@@ -115,7 +115,34 @@ _Before starting this application in your local environment, it'll be necessary 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+```sh
+flask shell
+```
 
+- Drop All Created Tables
+```sh
+db.drop_all()
+```
+
+- Create new tables
+```sh
+db.create_all()
+```
+
+- To create a new user
+```sh
+user = User(username="admin", password="admin")
+```
+
+  - To add new use on database
+  ```sh
+  db.session.add(user)
+  ```
+
+- To save all changes
+```sh
+db.session.commit()
+```
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -125,8 +152,13 @@ _Before starting this application in your local environment, it'll be necessary 
 - [x] POST /api/products/add
 - [x] DELETE /api/products/add/{product_id}
 - [x] GET /api/products/{product_id}
-- [x] UPDATE /api/products/update/{int:product_id}
+- [x] UPDATE /api/products/update/{product_id}
 - [x] GET /api/products
+- [x] POST /api/cart/add/{product_id}
+- [x] DELETE /api/cart/REMOVE/{item_id}
+- [x] GET /api/cart
+- [x] POST /api/cart/checkout
+- [] GET GET /api/products/search
 
 
 <p align="right">(<a href="#ecommerce">back to top</a>)</p>
